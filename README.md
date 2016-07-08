@@ -1,0 +1,1 @@
+The repository uses mongo geocoding support and then data is exported to mysql
