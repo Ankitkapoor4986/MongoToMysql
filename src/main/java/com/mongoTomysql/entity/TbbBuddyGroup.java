@@ -7,11 +7,23 @@ public class TbbBuddyGroup {
 
     private long userId;
     private long buddyGroupId;
+
+    @Override
+    public String toString() {
+        return "TbbBuddyGroup{" +
+                "userId=" + userId +
+                ", buddyGroupId=" + buddyGroupId +
+                ", lat=" + lat +
+                ", lng=" + lng +
+                ", groupId=" + groupId +
+                '}';
+    }
+
     private double lat;
     private double lng;
-    private int groupId;
+    private long groupId;
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
@@ -47,7 +59,7 @@ public class TbbBuddyGroup {
         this.lng = lng;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 
