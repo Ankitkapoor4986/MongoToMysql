@@ -7,7 +7,6 @@ import com.mongodb.*;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by ankit on 6/7/16.
@@ -23,6 +22,7 @@ public class MongoDao {
     public static final String LNG = "LNG";
     public static final int RADIUS = 1;
     public static final String $_SET = "$set";
+    private static final String BUDDY_GROUP_ID="buddyGroupId";
 
     public List<Long> getUserIdTOupdate(TbbBuddyGroup tbbBuddyGroup) {
         List<Long> userIds = new ArrayList<Long>();
@@ -92,43 +92,36 @@ public class MongoDao {
 
 
     public List<TbbBuddyGroup> getAllRecords(){
+        List<TbbBuddyGroup> tbbBuddyGroups=new ArrayList<TbbBuddyGroup>();
         MongoConnection connection=new MongoConnection();
         try {
             DB db=connection.getLportalDB();
             DBCollection tbbBuddyGroupCollection = db.getCollection(COLLECTION_TBB_BUDDY_GROUP);
+            DBCursor dbCursor=tbbBuddyGroupCollection.find();
+            while (dbCursor.hasNext()) {
+                TbbBuddyGroup group=new TbbBuddyGroup();
+                DBObject dbObject=dbCursor.next();
+                group.setUserId(Long.parseLong(dbObject.get(USER_ID).toString()));
+                group.setLng((Double) dbObject.get(LNG));
+                group.setLat((Double) dbObject.get(LAT));
+                group.setGroupId(Long.parseLong(dbObject.get(GROUP_ID).toString()));
+                group.setBuddyGroupId(Long.valueOf(dbObject.get(BUDDY_GROUP_ID).toString()));
+                System.out.println(group);
+                tbbBuddyGroups.add(group);
+
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        return null;
+        return tbbBuddyGroups;
     }
 
 
 
 
-    public static void main(String[] arStrings) {
-        MongoDao mongoDao = new MongoDao();
-        TbbBuddyGroup tbbBuddyGroup=new TbbBuddyGroup();
-        int groupIdCount=0;
-        while(tbbBuddyGroup!=null) {
-
-            tbbBuddyGroup = mongoDao.getTbbBuddyGroupWithMinusOneGroupId();
-
-            if (tbbBuddyGroup != null) {
-                List<Long> userIds = mongoDao.getUserIdTOupdate(tbbBuddyGroup);
-                System.out.println(userIds);
-
-                    groupIdCount++;
-                    userIds.add(tbbBuddyGroup.getUserId());
-                    mongoDao.updateUsers(groupIdCount,userIds);
 
 
-
-            }
-        }
-
-    }
-
-    private  void updateUsers(int count, List<Long> userIds) {
+    public  void updateUsers(int count, List<Long> userIds) {
 
 
         MongoConnection connection = new MongoConnection();

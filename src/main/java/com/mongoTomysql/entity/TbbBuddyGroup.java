@@ -63,5 +63,12 @@ public class TbbBuddyGroup {
         this.groupId = groupId;
     }
 
+    public String getUpdator(){
+        StringBuilder query=new StringBuilder();
+        query.append("update TBB_Buddy_Group set groupId=").append(groupId).append(" where userId=")
+                .append(userId);
+        return  query.toString();
+    }
+
 
 }
